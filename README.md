@@ -110,4 +110,8 @@ Contributions and suggestions are welcome.
 4. Open a pull request describing the improvement.
 License
 No license has been specified yet. Add a LICENSE file before distributing the project if you want to define reuse and contribution permissions.
+<<<<<<< HEAD
 PredictIQ — Predict Failures. Prevent Downtime. Improve Reliability.
+=======
+PredictIQ — Predict Failures. Prevent Downtime. Improve Reliability.
+>>>>>>> 051ace12d7d2e8fe5517906849eecb69547e32bc
