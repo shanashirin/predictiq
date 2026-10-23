@@ -1,0 +1,237 @@
+
+{% extends "base.html" %}
+
+{% block title %}Batch Results | PredictIQ{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <span class="eyebrow">PREDICTION ENGINE / RESULTS</span>
+
+    <h1>Batch <span>Results</span></h1>
+
+    <p>
+        Review the predicted machine failure status and risk category
+        for each processed sensor record.
+    </p>
+</section>
+
+<main class="page-container">
+
+    {% if error %}
+    <section class="panel-card">
+        <div class="alert alert-danger mb-0" role="alert">
+            {{ error }}
+        </div>
+    </section>
+    {% endif %}
+
+    {% if results %}
+
+    <!-- SUMMARY -->
+    <section class="panel-card">
+
+        <div class="section-heading">
+            <div>
+                <span class="section-kicker">ANALYSIS SUMMARY</span>
+                <h2>Prediction Overview</h2>
+                <p>Summary of the records processed by the model.</p>
+            </div>
+
+            <span class="status-pill">
+                <i></i> Processing Complete
+            </span>
+        </div>
+
+        <div class="row g-3">
+
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-label">Records Processed</div>
+                    <div class="stat-value">{{ results|length }}</div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-label">Predicted Failures</div>
+                    <div class="stat-value">
+                        {% set failure_count = namespace(value=0) %}
+                        {% for row in results %}
+                            {% if row.get('Predicted Class') == 1
+                                  or row.get('Predicted Class') == '1'
+                                  or row.get('Prediction') == 'Failure' %}
+                                {% set failure_count.value = failure_count.value + 1 %}
+                            {% endif %}
+                        {% endfor %}
+                        {{ failure_count.value }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="stat-card">
+                    <div class="stat-label">Predicted No Failure</div>
+                    <div class="stat-value">
+                        {{ results|length - failure_count.value }}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- RESULTS TABLE -->
+    <section class="panel-card">
+
+        <div class="section-heading">
+            <div>
+                <span class="section-kicker">RECORD-LEVEL OUTPUT</span>
+                <h2>Prediction Details</h2>
+                <p>
+                    Each row represents one processed machine record.
+                </p>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle">
+
+                <thead>
+                    <tr>
+                        {% for column in results[0].keys() %}
+                        <th>{{ column }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for row in results %}
+                    <tr>
+                        {% for column, value in row.items() %}
+                        <td>
+
+                            {% if column == 'Risk Category' %}
+                                {% if value == 'High' %}
+                                    <span class="risk-chip"
+                                          style="color:#fecdd3;background:rgba(251,113,133,.12)">
+                                        {{ value }}
+                                    </span>
+                                {% elif value == 'Medium' %}
+                                    <span class="risk-chip"
+                                          style="color:#fde68a;background:rgba(251,191,36,.12)">
+                                        {{ value }}
+                                    </span>
+                                {% elif value == 'Low' %}
+                                    <span class="risk-chip"
+                                          style="color:#a7f3d0;background:rgba(52,211,153,.12)">
+                                        {{ value }}
+                                    </span>
+                                {% else %}
+                                    {{ value }}
+                                {% endif %}
+
+                            {% elif column == 'Prediction' %}
+                                {% if value == 'Failure' %}
+                                    <span class="badge bg-danger">
+                                        Failure
+                                    </span>
+                                {% elif value == 'No Failure' %}
+                                    <span class="badge bg-success">
+                                        No Failure
+                                    </span>
+                                {% else %}
+                                    {{ value }}
+                                {% endif %}
+
+                            {% elif column == 'Failure Probability (%)' %}
+                                {{ value }}%
+
+                            {% else %}
+                                {{ value }}
+                            {% endif %}
+
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <p class="form-text mt-3">
+            Model predictions are estimates and should be evaluated
+            alongside maintenance inspections and operational data.
+        </p>
+
+    </section>
+
+    <!-- ACTIONS -->
+    <section class="panel-card">
+
+        <div class="section-heading">
+            <div>
+                <span class="section-kicker">EXPORT</span>
+                <h2>Save Your Results</h2>
+                <p>Download the generated predictions for further analysis.</p>
+            </div>
+        </div>
+
+        {% if download_token %}
+        <a
+            href="{{ url_for('download_results', token=download_token) }}"
+            class="btn btn-primary px-4 py-3"
+        >
+            Download Results CSV
+        </a>
+        {% else %}
+        <div class="notice">
+            The download token is unavailable. Check that your Flask
+            backend passes <code>download_token</code> to this template.
+        </div>
+        {% endif %}
+
+        <a
+            href="{{ url_for('batch_upload') }}"
+            class="btn btn-outline-info px-4 py-3 ms-2"
+        >
+            Upload Another CSV
+        </a>
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="btn btn-outline-info px-4 py-3 ms-2"
+        >
+            Dashboard
+        </a>
+
+    </section>
+
+    {% else %}
+
+    <section class="panel-card">
+        <div class="text-center py-4">
+            <h2>No Results Available</h2>
+
+            <p class="mt-3">
+                Upload a CSV file first to generate batch predictions.
+            </p>
+
+            <a
+                href="{{ url_for('batch_upload') }}"
+                class="btn btn-primary px-4 py-3 mt-2"
+            >
+                Upload CSV File
+            </a>
+        </div>
+    </section>
+
+    {% endif %}
+
+</main>
+
+{% endblock %}

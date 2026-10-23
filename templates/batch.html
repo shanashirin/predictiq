@@ -1,0 +1,174 @@
+
+{% extends "base.html" %}
+
+{% block title %}Batch Prediction | PredictIQ{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+    <span class="eyebrow">BATCH PROCESSING / CSV ANALYSIS</span>
+
+    <h1>Batch <span>Prediction</span></h1>
+
+    <p>
+        Upload machine sensor data and analyze multiple records
+        in a single operation using your trained predictive
+        maintenance model.
+    </p>
+</section>
+
+<main class="page-container">
+
+    <!-- UPLOAD PANEL -->
+    <section class="panel-card">
+
+        <div class="section-heading">
+            <div>
+                <span class="section-kicker">DATA INPUT</span>
+                <h2>Upload Machine Data</h2>
+                <p>
+                    Select a CSV file containing machine sensor readings.
+                </p>
+            </div>
+
+            <span class="status-pill">
+                <i></i> CSV Supported
+            </span>
+        </div>
+
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        {% if message %}
+        <div class="alert alert-info" role="alert">
+            {{ message }}
+        </div>
+        {% endif %}
+
+        <form
+            action="{{ url_for('batch_predict') }}"
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <div class="field-card mb-4">
+
+                <label for="file" class="form-label">
+                    Select CSV File
+                </label>
+
+                <input
+                    type="file"
+                    class="form-control"
+                    id="file"
+                    name="file"
+                    accept=".csv,text/csv"
+                    required
+                >
+
+                <div class="form-text mt-2">
+                    Maximum file size: 10 MB. Maximum records: 5,000.
+                    Upload a CSV containing the required sensor features.
+                </div>
+
+            </div>
+
+            <div class="notice mb-4">
+                <strong>Required sensor features</strong>
+
+                <p class="mt-2 mb-2">
+                    Your CSV should contain these machine measurements:
+                </p>
+
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="badge bg-secondary">Air temperature</span>
+                    <span class="badge bg-secondary">Process temperature</span>
+                    <span class="badge bg-secondary">Rotational speed</span>
+                    <span class="badge bg-secondary">Torque</span>
+                    <span class="badge bg-secondary">Tool wear</span>
+                </div>
+
+                <p class="form-text mt-3 mb-0">
+                    Machine type can be supplied as H, M, or L.
+                    If omitted, your backend may use its configured default.
+                    Use the column names supported by your Flask backend.
+                </p>
+            </div>
+
+            <button type="submit" class="btn btn-primary px-4 py-3">
+                Generate Predictions
+            </button>
+
+            <a
+                href="{{ url_for('home') }}"
+                class="btn btn-outline-info px-4 py-3 ms-2"
+            >
+                Back to Single Prediction
+            </a>
+
+        </form>
+
+    </section>
+
+    <!-- INFORMATION PANEL -->
+    <section class="panel-card">
+
+        <div class="section-heading">
+            <div>
+                <span class="section-kicker">HOW IT WORKS</span>
+                <h2>Batch Analysis Workflow</h2>
+            </div>
+        </div>
+
+        <div class="row g-3">
+
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <div class="stat-label">STEP 01</div>
+                    <h3 class="h5 mt-2">Upload</h3>
+                    <p class="mb-0">
+                        Choose a CSV file containing machine sensor data.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <div class="stat-label">STEP 02</div>
+                    <h3 class="h5 mt-2">Validate</h3>
+                    <p class="mb-0">
+                        The backend checks the uploaded data before prediction.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <div class="stat-label">STEP 03</div>
+                    <h3 class="h5 mt-2">Predict</h3>
+                    <p class="mb-0">
+                        The trained model generates predictions for each record.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="stat-card">
+                    <div class="stat-label">STEP 04</div>
+                    <h3 class="h5 mt-2">Review</h3>
+                    <p class="mb-0">
+                        Review the results and download the processed CSV.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock %}

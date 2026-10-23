@@ -1,0 +1,697 @@
+{% extends "base.html" %}
+
+{% block title %}Home | PredictIQ{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="home-hero">
+    <div class="hero-glow"></div>
+
+    <div class="hero-content">
+        <div class="home-badge">
+            <span class="pulse-dot"></span>
+            AI-POWERED PREDICTIVE MAINTENANCE
+        </div>
+
+        <h1>
+            Predict Failures.<br>
+            <span>Prevent Downtime.</span>
+        </h1>
+
+        <p class="hero-description">
+            Transform machine sensor data into actionable insights.
+            Predict potential failures, analyze multiple machines,
+            and make smarter maintenance decisions with PredictIQ.
+        </p>
+
+        <div class="home-actions">
+            <a href="{{ url_for('home') }}"
+               class="home-btn home-btn-primary">
+                <span>Run Single Prediction</span>
+                <span aria-hidden="true">&rarr;</span>
+            </a>
+
+            <a href="{{ url_for('batch_upload') }}"
+               class="home-btn home-btn-secondary">
+                <span aria-hidden="true">&#8593;</span>
+                Upload CSV Dataset
+            </a>
+        </div>
+
+        <div class="hero-caption">
+            <span><span class="caption-dot"></span> Machine Learning</span>
+            <span><span class="caption-dot"></span> Sensor Analytics</span>
+            <span><span class="caption-dot"></span> Batch Predictions</span>
+        </div>
+    </div>
+</section>
+
+<main class="home-container">
+
+    <!-- FEATURES -->
+    <section class="home-section">
+        <div class="section-intro">
+            <span class="home-kicker">PLATFORM CAPABILITIES</span>
+            <h2>Everything you need to monitor machine health</h2>
+            <p>
+                From individual sensor readings to large datasets,
+                explore your machine data through one unified platform.
+            </p>
+        </div>
+
+        <div class="home-feature-grid">
+
+            <article class="home-feature-card">
+                <div class="feature-top">
+                    <div class="feature-icon blue-icon">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path d="M12 3v3m0 12v3M3 12h3m12 0h3"/>
+                            <circle cx="12" cy="12" r="8"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </div>
+                    <span class="feature-number">01</span>
+                </div>
+
+                <h3>Single Prediction</h3>
+                <p>
+                    Analyze individual machine sensor readings and
+                    identify potential failure risks.
+                </p>
+
+                <a href="{{ url_for('home') }}" class="feature-link">
+                    Start prediction <span>&rarr;</span>
+                </a>
+            </article>
+
+            <article class="home-feature-card">
+                <div class="feature-top">
+                    <div class="feature-icon cyan-icon">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path d="M12 3v3m0 12v3"/>
+                            <rect x="4" y="6" width="16" height="12" rx="2"/>
+                            <path d="M8 10h8m-8 4h5"/>
+                        </svg>
+                    </div>
+                    <span class="feature-number">02</span>
+                </div>
+
+                <h3>Batch Prediction</h3>
+                <p>
+                    Process multiple sensor records with CSV uploads
+                    and review predictions in one place.
+                </p>
+
+                <a href="{{ url_for('batch_upload') }}" class="feature-link">
+                    Analyze a dataset <span>&rarr;</span>
+                </a>
+            </article>
+
+            <article class="home-feature-card">
+                <div class="feature-top">
+                    <div class="feature-icon purple-icon">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path d="M3 3v18h18"/>
+                            <path d="m7 14 4-4 3 3 6-7"/>
+                            <path d="M16 6h4v4"/>
+                        </svg>
+                    </div>
+                    <span class="feature-number">03</span>
+                </div>
+
+                <h3>Model Dashboard</h3>
+                <p>
+                    Review model readiness, dataset statistics,
+                    batch summaries, and available evaluation metrics.
+                </p>
+
+                <a href="{{ url_for('dashboard') }}" class="feature-link">
+                    View dashboard <span>&rarr;</span>
+                </a>
+            </article>
+
+            <article class="home-feature-card">
+                <div class="feature-top">
+                    <div class="feature-icon green-icon">
+                        <svg viewBox="0 0 24 24" fill="none"
+                             stroke="currentColor" stroke-width="1.8"
+                             stroke-linecap="round" stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <path d="M14 2v6h6M8 13h8m-8 4h8"/>
+                        </svg>
+                    </div>
+                    <span class="feature-number">04</span>
+                </div>
+
+                <h3>Prediction Results</h3>
+                <p>
+                    Review prediction outcomes and download generated
+                    batch results for further analysis.
+                </p>
+
+                <a href="{{ url_for('batch_upload') }}" class="feature-link">
+                    View results <span>&rarr;</span>
+                </a>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="home-section workflow-section">
+        <div class="section-intro">
+            <span class="home-kicker">SIMPLE WORKFLOW</span>
+            <h2>From sensor data to smarter decisions</h2>
+            <p>
+                A straightforward workflow to help you explore
+                machine conditions and predicted failure risks.
+            </p>
+        </div>
+
+        <div class="workflow-grid">
+            <div class="workflow-step">
+                <div class="workflow-number">01</div>
+                <h3>Provide Sensor Data</h3>
+                <p>Enter machine readings or upload a supported CSV file.</p>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">02</div>
+                <h3>Run AI Prediction</h3>
+                <p>The trained model analyzes the provided sensor values.</p>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">03</div>
+                <h3>Review Results</h3>
+                <p>View the predicted failure status and probability when available.</p>
+            </div>
+
+            <div class="workflow-step">
+                <div class="workflow-number">04</div>
+                <h3>Monitor Performance</h3>
+                <p>Use the dashboard to explore available summaries and metrics.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CALL TO ACTION -->
+    <section class="home-cta">
+        <div>
+            <span class="home-kicker">GET STARTED</span>
+            <h2>Make your machine data more useful.</h2>
+            <p>
+                Start with a single prediction or analyze a complete
+                sensor dataset.
+            </p>
+        </div>
+
+        <div class="cta-actions">
+            <a href="{{ url_for('home') }}" class="home-btn home-btn-primary">
+                Start Predicting <span>&rarr;</span>
+            </a>
+            <a href="{{ url_for('dashboard') }}"
+               class="home-btn home-btn-secondary">
+                Explore Dashboard
+            </a>
+        </div>
+    </section>
+
+</main>
+
+<style>
+/* HOME PAGE */
+.home-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    text-align: center;
+    padding: 88px 24px 76px;
+    background:
+        radial-gradient(ellipse at 50% 0%, rgba(14, 165, 233, .14), transparent 58%),
+        linear-gradient(180deg, #08182a 0%, #071222 100%);
+    border-bottom: 1px solid rgba(56, 189, 248, .14);
+}
+
+.hero-glow {
+    position: absolute;
+    z-index: -1;
+    width: 360px;
+    height: 360px;
+    top: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(14, 165, 233, .10);
+    filter: blur(100px);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.hero-content {
+    max-width: 920px;
+    margin: 0 auto;
+}
+
+.home-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 9px 15px;
+    border: 1px solid rgba(56, 189, 248, .25);
+    border-radius: 999px;
+    background: rgba(14, 165, 233, .08);
+    color: #67d5ff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+}
+
+.pulse-dot,
+.caption-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #2dd4bf;
+    flex-shrink: 0;
+}
+
+.home-hero h1 {
+    margin: 30px 0 18px;
+    font-size: clamp(54px, 7vw, 88px);
+    line-height: 1.06;
+    letter-spacing: -3px;
+    font-weight: 800;
+    color: #f1f7ff;
+}
+
+.home-hero h1 span {
+    color: #38bdf8;
+}
+
+.home-hero h2 {
+    margin: 0 auto 20px;
+    font-size: clamp(23px, 3vw, 35px);
+    line-height: 1.3;
+    font-weight: 650;
+    color: #e5edf8;
+}
+
+.hero-description {
+    max-width: 760px;
+    margin: 0 auto;
+    color: #9db2cc;
+    font-size: 17px;
+    line-height: 1.9;
+}
+
+.home-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-top: 32px;
+}
+
+.home-btn {
+    min-height: 52px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 14px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 650;
+    transition: transform .2s ease, border-color .2s ease,
+                background .2s ease, box-shadow .2s ease;
+}
+
+.home-btn:hover {
+    transform: translateY(-2px);
+}
+
+.home-btn-primary {
+    color: #041321;
+    background: linear-gradient(135deg, #38bdf8, #60a5fa);
+    border: 1px solid transparent;
+    box-shadow: 0 8px 24px rgba(14, 165, 233, .15);
+}
+
+.home-btn-primary:hover {
+    color: #041321;
+    box-shadow: 0 12px 30px rgba(14, 165, 233, .25);
+}
+
+.home-btn-secondary {
+    color: #b9eaff;
+    background: rgba(8, 24, 42, .6);
+    border: 1px solid rgba(56, 189, 248, .35);
+}
+
+.home-btn-secondary:hover {
+    color: #fff;
+    border-color: #38bdf8;
+    background: rgba(14, 165, 233, .1);
+}
+
+.hero-caption {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 30px;
+    color: #91a6bf;
+    font-size: 13px;
+}
+
+.hero-caption span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.caption-dot {
+    width: 6px;
+    height: 6px;
+    background: #38bdf8;
+}
+
+/* CONTENT CONTAINER */
+.home-container {
+    width: min(1400px, 100%);
+    margin: 0 auto;
+    padding: 48px 28px 64px;
+}
+
+.home-section {
+    margin-bottom: 52px;
+}
+
+.section-intro {
+    max-width: 760px;
+    margin-bottom: 28px;
+}
+
+.home-kicker {
+    color: #38bdf8;
+    font-size: 12px;
+    font-weight: 750;
+    letter-spacing: 1.7px;
+}
+
+.section-intro h2,
+.home-cta h2 {
+    margin: 12px 0;
+    color: #edf5ff;
+    font-size: clamp(26px, 3vw, 36px);
+    line-height: 1.25;
+    font-weight: 750;
+    letter-spacing: -.7px;
+}
+
+.section-intro p,
+.home-cta p {
+    color: #9db2cc;
+    line-height: 1.8;
+    margin-bottom: 0;
+    font-size: 15px;
+}
+
+/* FEATURE CARDS */
+.home-feature-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.home-feature-card {
+    min-width: 0;
+    min-height: 285px;
+    display: flex;
+    flex-direction: column;
+    padding: 25px;
+    border: 1px solid #243a53;
+    border-radius: 16px;
+    background: linear-gradient(155deg, #11233a, #0b192b);
+    transition: transform .22s ease, border-color .22s ease,
+                box-shadow .22s ease;
+}
+
+.home-feature-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(56, 189, 248, .6);
+    box-shadow: 0 16px 36px rgba(0, 0, 0, .18);
+}
+
+.feature-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 23px;
+}
+
+.feature-icon {
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border-radius: 13px;
+}
+
+.feature-icon svg {
+    width: 25px;
+    height: 25px;
+}
+
+.blue-icon {
+    color: #60a5fa;
+    background: rgba(59, 130, 246, .13);
+}
+
+.cyan-icon {
+    color: #22d3ee;
+    background: rgba(34, 211, 238, .12);
+}
+
+.purple-icon {
+    color: #a78bfa;
+    background: rgba(167, 139, 250, .13);
+}
+
+.green-icon {
+    color: #34d399;
+    background: rgba(52, 211, 153, .12);
+}
+
+.feature-number {
+    color: #7087a2;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.home-feature-card h3 {
+    color: #edf5ff;
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 12px;
+}
+
+.home-feature-card p {
+    color: #9db2cc;
+    font-size: 14px;
+    line-height: 1.8;
+    margin: 0 0 24px;
+}
+
+.feature-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: auto;
+    color: #5dcaff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.feature-link span {
+    transition: transform .2s ease;
+}
+
+.feature-link:hover {
+    color: #b9eaff;
+}
+
+.feature-link:hover span {
+    transform: translateX(4px);
+}
+
+/* WORKFLOW */
+.workflow-section {
+    padding: 34px;
+    border: 1px solid #223a54;
+    border-radius: 18px;
+    background: linear-gradient(140deg, #102139, #0b1728);
+}
+
+.workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 26px;
+}
+
+.workflow-step {
+    min-width: 0;
+}
+
+.workflow-number {
+    width: 42px;
+    height: 42px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 17px;
+    border-radius: 12px;
+    background: rgba(14, 165, 233, .12);
+    border: 1px solid rgba(56, 189, 248, .23);
+    color: #67d5ff;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.workflow-step h3 {
+    color: #edf5ff;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.workflow-step p {
+    color: #9db2cc;
+    font-size: 14px;
+    line-height: 1.8;
+    margin: 0;
+}
+
+/* FINAL CTA */
+.home-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    padding: 34px;
+    border: 1px solid rgba(56, 189, 248, .24);
+    border-radius: 18px;
+    background:
+        radial-gradient(ellipse at 100% 0%, rgba(14, 165, 233, .13), transparent 55%),
+        #0e1d30;
+}
+
+.home-cta h2 {
+    font-size: clamp(24px, 3vw, 32px);
+}
+
+.cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1100px) {
+    .home-feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .workflow-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .home-cta {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 600px) {
+    .home-hero {
+        padding: 58px 18px 48px;
+    }
+
+    .home-hero h1 {
+        letter-spacing: -1.8px;
+    }
+
+    .home-badge {
+        font-size: 10px;
+        letter-spacing: 1px;
+    }
+
+    .hero-description {
+        font-size: 15px;
+    }
+
+    .home-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .home-btn {
+        width: 100%;
+    }
+
+    .hero-caption {
+        gap: 12px;
+        flex-direction: column;
+    }
+
+    .home-container {
+        padding: 32px 16px 44px;
+    }
+
+    .home-feature-grid,
+    .workflow-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .home-feature-card {
+        min-height: 250px;
+    }
+
+    .workflow-section,
+    .home-cta {
+        padding: 23px;
+    }
+
+    .cta-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-btn,
+    .home-feature-card,
+    .feature-link span {
+        transition: none;
+    }
+}
+</style>
+
+{% endblock %}

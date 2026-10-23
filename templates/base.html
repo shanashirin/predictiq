@@ -1,0 +1,484 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}PredictIQ{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #07111f;
+            --panel: #102039;
+            --primary: #38bdf8;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --border: rgba(148, 163, 184, .18);
+            --success: #34d399;
+            --danger: #fb7185;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+            background:
+                radial-gradient(
+                    ellipse at 10% 0%,
+                    rgba(14,165,233,.13),
+                    transparent 38%
+                ),
+                radial-gradient(
+                    ellipse at 90% 40%,
+                    rgba(37,99,235,.10),
+                    transparent 35%
+                ),
+                var(--bg);
+        }
+
+        .navbar {
+            background: rgba(7,17,31,.95);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .navbar-brand {
+            color: var(--text) !important;
+            font-weight: 800;
+            letter-spacing: -.5px;
+        }
+
+        .brand-icon {
+            color: var(--primary);
+        }
+
+        .navbar .nav-link {
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            padding: 10px 13px !important;
+            border-radius: 8px;
+            transition: .2s;
+        }
+
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active {
+            color: var(--primary);
+            background: rgba(56,189,248,.08);
+        }
+
+        .navbar-toggler {
+            border-color: var(--border);
+        }
+
+        .navbar-toggler-icon {
+            filter: invert(1);
+        }
+
+        .page-container {
+            width: min(1120px, 92%);
+            margin: 0 auto;
+            padding-bottom: 55px;
+        }
+
+        .hero {
+            padding: 55px 15px 35px;
+            text-align: center;
+        }
+
+        .eyebrow,
+        .section-kicker {
+            color: var(--primary);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.7px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            margin: 15px 0;
+            font-size: clamp(30px, 5vw, 46px);
+            font-weight: 800;
+            letter-spacing: -1.6px;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+        }
+
+        .hero p {
+            max-width: 680px;
+            margin: auto;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .panel-card {
+            padding: clamp(20px, 3vw, 32px);
+            margin-bottom: 22px;
+            background: linear-gradient(
+                145deg,
+                rgba(21,39,64,.96),
+                rgba(13,27,46,.98)
+            );
+            border: 1px solid rgba(125,211,252,.15);
+            border-radius: 20px;
+            box-shadow: 0 20px 55px rgba(0,0,0,.18);
+        }
+
+        .panel-card h2,
+        .panel-card h3 {
+            font-weight: 700;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 24px;
+        }
+
+        .section-heading h2 {
+            margin: 7px 0;
+            font-size: 22px;
+        }
+
+        .section-heading p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .stat-card {
+            height: 100%;
+            padding: 22px;
+            background: rgba(7,17,31,.5);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .stat-value {
+            margin-top: 10px;
+            font-size: 28px;
+            font-weight: 800;
+            overflow-wrap: anywhere;
+        }
+
+        .status-pill,
+        .risk-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-pill {
+            color: #a7f3d0;
+            background: rgba(52,211,153,.09);
+            border: 1px solid rgba(52,211,153,.25);
+        }
+
+        .status-pill i {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .form-control,
+        .form-select {
+            color: var(--text);
+            background-color: #091626;
+            border: 1px solid #293c54;
+            border-radius: 10px;
+            padding: 12px 14px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            color: var(--text);
+            background-color: #091626;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(56,189,248,.12);
+        }
+
+        .form-select option {
+            background: #091626;
+            color: white;
+        }
+
+        .form-label {
+            color: #dbeafe;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .form-text {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .btn-primary {
+            color: #031525;
+            font-weight: 800;
+            background: linear-gradient(100deg, #38bdf8, #60a5fa);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            color: #031525;
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-info {
+            color: var(--primary);
+            border-color: rgba(56,189,248,.45);
+        }
+
+        .btn-outline-info:hover {
+            color: #031525;
+            background: var(--primary);
+        }
+
+        .table-responsive {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .table {
+            margin: 0;
+            color: var(--text);
+            vertical-align: middle;
+        }
+
+        .table th {
+            color: #bae6fd;
+            background: rgba(7,17,31,.7);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .table td {
+            color: var(--text);
+            background: rgba(7,17,31,.2);
+            border-color: var(--border);
+            font-size: 12px;
+        }
+
+        .table-striped > tbody > tr:nth-of-type(odd) > * {
+            color: var(--text);
+            background: rgba(7,17,31,.35);
+        }
+
+        .alert {
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        .alert-danger {
+            color: #fecdd3;
+            background: rgba(159,18,57,.17);
+            border-color: rgba(251,113,133,.4);
+        }
+
+        .alert-warning {
+            color: #fde68a;
+            background: rgba(146,64,14,.16);
+            border-color: rgba(251,191,36,.3);
+        }
+
+        .alert-success {
+            color: #a7f3d0;
+            background: rgba(6,78,59,.25);
+            border-color: rgba(52,211,153,.3);
+        }
+
+        .notice {
+            padding: 15px 18px;
+            color: var(--muted);
+            background: rgba(7,17,31,.45);
+            border-left: 3px solid var(--primary);
+            border-radius: 5px 10px 10px 5px;
+            font-size: 11px;
+            line-height: 1.8;
+        }
+
+        .field-card {
+            height: 100%;
+            padding: 20px;
+            background: rgba(7,17,31,.42);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            transition: .2s;
+        }
+
+        .field-card:hover,
+        .field-card:focus-within {
+            border-color: rgba(56,189,248,.65);
+            background: rgba(14,165,233,.055);
+            transform: translateY(-2px);
+        }
+
+        .result {
+            padding: 25px;
+            border: 1px solid;
+            border-radius: 16px;
+        }
+
+        .result.success {
+            color: #a7f3d0;
+            background: rgba(6,78,59,.25);
+            border-color: rgba(52,211,153,.4);
+        }
+
+        .result.danger {
+            color: #fecdd3;
+            background: rgba(136,19,55,.25);
+            border-color: rgba(251,113,133,.45);
+        }
+
+        footer {
+            padding: 24px 15px;
+            color: #64748b;
+            text-align: center;
+            border-top: 1px solid var(--border);
+            font-size: 11px;
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                padding-top: 38px;
+            }
+
+            .navbar .nav-link {
+                padding-left: 8px !important;
+            }
+
+            .stat-value {
+                font-size: 23px;
+            }
+        }
+        /* Keep all navbar links consistent */
+.navbar a,
+.navbar .nav-link {
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 16px;
+    border-radius: 10px;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+/* Hover effect */
+.navbar a:hover,
+.navbar .nav-link:hover {
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.08);
+    text-decoration: none;
+}
+
+/* Active page */
+.navbar a.active,
+.navbar .nav-link.active {
+    color: #38bdf8;
+    background: rgba(56, 189, 248, 0.10);
+    text-decoration: none;
+}
+
+/* Prevent browser-default link styling */
+.navbar a:visited {
+    text-decoration: none;
+}
+    </style>
+
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+
+        <a class="navbar-brand" href="{{ url_for('home') }}">
+            <span class="brand-icon">⚙</span> PredictIQ
+        </a>
+
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#mainNavigation"
+                aria-controls="mainNavigation"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavigation">
+            <div class="navbar-nav ms-auto">
+                <a href="{{ url_for('landing') }}">Home</a>
+
+                <a class="nav-link {% if request.endpoint in ['home', 'predict'] %}active{% endif %}"
+                   href="{{ url_for('home') }}">
+                    Single Prediction
+                </a>
+
+                <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}"
+                   href="{{ url_for('dashboard') }}">
+                    Dashboard
+                </a>
+
+                <a class="nav-link {% if request.endpoint in ['batch_upload', 'batch_predict', 'download_results'] %}active{% endif %}"
+                   href="{{ url_for('batch_upload') }}">
+                    Batch CSV
+                </a>
+
+            </div>
+        </div>
+    </div>
+</nav>
+
+{% if artifact_error %}
+<div class="container mt-3">
+    <div class="alert alert-warning mb-0" role="alert">
+        <strong>Model artifacts unavailable:</strong>
+        {{ artifact_error }}
+    </div>
+</div>
+{% endif %}
+
+{% block content %}{% endblock %}
+
+<footer>
+    PredictIQ · Predictive Maintenance System · Machine Learning + Flask
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{% block scripts %}{% endblock %}
+
+</body>
+</html>

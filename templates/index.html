@@ -1,423 +1,59 @@
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PredictIQ</title>
+{% extends "base.html" %}
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+{% block title %}Single Prediction | PredictIQ{% endblock %}
 
-        :root {
-            --bg: #07111f;
-            --primary: #38bdf8;
-            --text: #f1f5f9;
-            --muted: #94a3b8;
-            --border: rgba(148, 163, 184, 0.17);
-            --success: #34d399;
-            --danger: #fb7185;
-        }
+{% block content %}
 
-        * {
-            box-sizing: border-box;
-        }
+<section class="hero">
+    <span class="eyebrow">INDUSTRIAL INTELLIGENCE / ML MONITORING</span>
 
-        html {
-            scroll-behavior: smooth;
-        }
+    <h1>Machine Failure <span>Prediction</span></h1>
 
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: 'Inter', 'Segoe UI', sans-serif;
-            color: var(--text);
-            background:
-                radial-gradient(ellipse at 15% 5%, rgba(14,165,233,.15), transparent 38%),
-                radial-gradient(ellipse at 90% 45%, rgba(37,99,235,.10), transparent 35%),
-                var(--bg);
-        }
+    <p>
+        Enter machine sensor readings to estimate the likelihood
+        of a machine failure using your trained machine-learning model.
+    </p>
+</section>
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            padding: 22px 7%;
-            background: rgba(7,17,31,.9);
-            border-bottom: 1px solid var(--border);
-            backdrop-filter: blur(18px);
-        }
+<main class="page-container">
 
-        header h2 {
-            margin: 0;
-            font-size: 21px;
-            font-weight: 800;
-            letter-spacing: -.6px;
-        }
+    <section class="panel-card">
 
-        header h2::first-letter {
-            color: var(--primary);
-        }
+        <div class="section-heading">
+            <div>
+                <span class="section-kicker">SENSOR INPUT</span>
+                <h2>Machine Sensor Parameters</h2>
+                <p>Enter the current operating values of your machine.</p>
+            </div>
 
-        header span {
-            display: inline-flex;
-            align-items: center;
-            gap: 9px;
-            color: #bae6fd;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
+            <span class="status-pill">
+                <i></i> Single prediction
+            </span>
+        </div>
 
-        header span::before {
-            content: "";
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success);
-            box-shadow: 0 0 12px rgba(52,211,153,.6);
-        }
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            <strong>Prediction error:</strong> {{ error }}
+        </div>
+        {% endif %}
 
-        .hero {
-            max-width: 1000px;
-            margin: auto;
-            padding: 65px 24px 42px;
-            text-align: center;
-            animation: fadeUp .7s ease both;
-        }
+        <form action="{{ url_for('predict') }}" method="POST">
 
-        .hero::before {
-            content: "INDUSTRIAL INTELLIGENCE / ML MONITORING";
-            display: inline-block;
-            margin-bottom: 24px;
-            padding: 9px 15px;
-            color: #7dd3fc;
-            background: rgba(14,165,233,.09);
-            border: 1px solid rgba(56,189,248,.25);
-            border-radius: 30px;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-        }
+            <div class="row g-3">
 
-        .hero h1 {
-            margin: 0 0 18px;
-            font-size: clamp(32px,5vw,53px);
-            line-height: 1.15;
-            letter-spacing: -2px;
-            font-weight: 800;
-            background: linear-gradient(100deg,#fff 15%,#7dd3fc 55%,#60a5fa 90%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
+                {% for field in sensor_fields %}
+                <div class="col-md-6">
 
-        .hero p {
-            max-width: 650px;
-            margin: auto;
-            color: var(--muted);
-            font-size: 15px;
-            line-height: 1.9;
-        }
+                    <div class="field-card">
 
-        .container {
-            width: min(1050px,92%);
-            margin: 0 auto 65px;
-            animation: fadeUp .85s ease both;
-        }
-
-        .card {
-            position: relative;
-            overflow: hidden;
-            padding: clamp(22px,4vw,40px);
-            background: linear-gradient(145deg,rgba(21,39,64,.96),rgba(13,27,46,.98));
-            border: 1px solid rgba(125,211,252,.15);
-            border-radius: 22px;
-            box-shadow: 0 25px 70px rgba(0,0,0,.25),
-                        inset 0 1px 0 rgba(255,255,255,.035);
-        }
-
-        .card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 8%;
-            right: 8%;
-            height: 1px;
-            background: linear-gradient(90deg,transparent,#38bdf8,transparent);
-        }
-
-        .card h2 {
-            margin: 0 0 12px;
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: -.5px;
-        }
-
-        .card > p {
-            color: var(--muted);
-            font-size: 13px;
-            line-height: 1.8;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(2,minmax(0,1fr));
-            gap: 20px;
-            margin-top: 28px;
-        }
-
-        .field {
-            display: flex;
-            flex-direction: column;
-            gap: 11px;
-            padding: 20px;
-            background: rgba(7,17,31,.42);
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            transition: .25s ease;
-        }
-
-        .field:hover,
-        .field:focus-within {
-            border-color: rgba(56,189,248,.65);
-            background: rgba(14,165,233,.055);
-            transform: translateY(-2px);
-        }
-
-        label {
-            color: #dbeafe;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        input {
-            width: 100%;
-            padding: 14px 15px;
-            color: #f8fafc;
-            background: #091626;
-            border: 1px solid #293c54;
-            border-radius: 10px;
-            outline: none;
-            font: inherit;
-            font-size: 15px;
-            font-weight: 600;
-            transition: .25s ease;
-            color-scheme: dark;
-        }
-
-        input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(56,189,248,.10);
-        }
-
-        .hint {
-            color: #8195ad;
-            font-size: 11px;
-        }
-
-        button {
-            width: 100%;
-            margin-top: 28px;
-            padding: 17px 22px;
-            color: #031525;
-            background: linear-gradient(100deg,#38bdf8,#60a5fa);
-            border: none;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 800;
-            letter-spacing: .3px;
-            cursor: pointer;
-            box-shadow: 0 8px 28px rgba(14,165,233,.18);
-            transition: .25s ease;
-        }
-
-        button:hover {
-            transform: translateY(-3px);
-            filter: brightness(1.08);
-            box-shadow: 0 12px 35px rgba(14,165,233,.3);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        .result {
-            margin-top: 28px;
-            padding: 25px;
-            border: 1px solid;
-            border-radius: 16px;
-            animation: fadeUp .45s ease both;
-        }
-
-        .result h2 {
-            font-size: 21px;
-        }
-
-        .result p {
-            font-size: 14px;
-            line-height: 1.8;
-        }
-
-        .success {
-            color: #a7f3d0;
-            background: linear-gradient(135deg,rgba(6,78,59,.38),rgba(6,78,59,.12));
-            border-color: rgba(52,211,153,.4);
-        }
-
-        .success h2::before {
-            content: "✓ ";
-            color: var(--success);
-        }
-
-        .danger {
-            color: #fecdd3;
-            background: linear-gradient(135deg,rgba(136,19,55,.38),rgba(136,19,55,.12));
-            border-color: rgba(251,113,133,.45);
-        }
-
-        .danger h2::before {
-            content: "! ";
-            color: var(--danger);
-        }
-
-        .result strong {
-            color: #fff;
-        }
-
-        .error {
-            margin: 20px 0;
-            padding: 17px 20px;
-            color: #fecdd3;
-            background: rgba(159,18,57,.17);
-            border: 1px solid rgba(251,113,133,.4);
-            border-radius: 12px;
-            font-size: 13px;
-            line-height: 1.8;
-        }
-
-        .note {
-            margin-top: 24px;
-            padding: 15px 18px;
-            color: #94a3b8;
-            background: rgba(7,17,31,.45);
-            border-left: 3px solid #38bdf8;
-            border-radius: 5px 10px 10px 5px;
-            font-size: 11px;
-            line-height: 1.9;
-        }
-
-        footer {
-            padding: 25px 20px;
-            color: #64748b;
-            background: rgba(7,17,31,.75);
-            border-top: 1px solid var(--border);
-            text-align: center;
-            font-size: 12px;
-            letter-spacing: .3px;
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(16px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @media (max-width:650px) {
-            header {
-                padding: 19px 5%;
-            }
-
-            header h2 {
-                font-size: 17px;
-            }
-
-            header span {
-                font-size: 9px;
-            }
-
-            .hero {
-                padding: 48px 20px 32px;
-            }
-
-            .hero h1 {
-                letter-spacing: -1px;
-            }
-
-            .hero p {
-                font-size: 13px;
-            }
-
-            .grid {
-                grid-template-columns: 1fr;
-                gap: 14px;
-            }
-
-            .field {
-                padding: 17px;
-            }
-
-            .card {
-                border-radius: 17px;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: .01ms !important;
-                transition-duration: .01ms !important;
-                scroll-behavior: auto !important;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <header>
-        <h2>⚙ PredictIQ</h2>
-        <span>Machine Learning System</span>
-    </header>
-
-    <section class="hero">
-        <h1>Machine Failure Prediction</h1>
-        <p>
-            Enter machine sensor readings to estimate the likelihood
-            of a failure using your trained machine learning model.
-        </p>
-    </section>
-
-    <main class="container">
-        <section class="card">
-            <h2>Machine Sensor Parameters</h2>
-            <p>Enter the current operating values of your machine.</p>
-
-            {% if error %}
-                <div class="error" role="alert">
-                    <strong>Prediction Error</strong><br>
-                    {{ error }}
-                </div>
-            {% endif %}
-
-            <form action="{{ url_for('predict') }}" method="POST">
-                <div class="grid">
-                    {% for field in sensor_fields %}
-                    <div class="field">
-                        <label for="{{ field.name }}">
+                        <label class="form-label"
+                               for="{{ field.name }}">
                             {{ field.label }}
                         </label>
 
                         <input
+                            class="form-control"
                             type="number"
                             id="{{ field.name }}"
                             name="{{ field.name }}"
@@ -428,42 +64,94 @@
                             required
                         >
 
-                        <span class="hint">
+                        <div class="form-text">
                             Allowed range: {{ field.min }}–{{ field.max }}
-                        </span>
+                        </div>
+
                     </div>
-                    {% endfor %}
+                </div>
+                {% endfor %}
+
+                <div class="col-md-6">
+                    <div class="field-card">
+
+                        <label class="form-label" for="machine_type">
+                            Machine Type
+                        </label>
+
+                        <select
+                            class="form-select"
+                            id="machine_type"
+                            name="machine_type"
+                            required
+                        >
+                            <option value="H"
+                                {% if values.get('machine_type', 'H') == 'H' %}selected{% endif %}>
+                                H — High
+                            </option>
+
+                            <option value="M"
+                                {% if values.get('machine_type', 'H') == 'M' %}selected{% endif %}>
+                                M — Medium
+                            </option>
+
+                            <option value="L"
+                                {% if values.get('machine_type', 'H') == 'L' %}selected{% endif %}>
+                                L — Low
+                            </option>
+                        </select>
+
+                        <div class="form-text">
+                            Select the machine type used by your trained model.
+                        </div>
+
+                    </div>
                 </div>
 
-                <button type="submit">
-                    ⚡ Predict Machine Condition
-                </button>
-            </form>
-
-            {% if result %}
-            <div class="result {{ result.result_class }}" role="status">
-                <h2>{{ result.status }}</h2>
-                <p>{{ result.description }}</p>
-
-                {% if result.probability is not none %}
-                <p>
-                    <strong>Model-estimated failure probability:</strong>
-                    {{ result.probability }}%
-                </p>
-                {% endif %}
             </div>
+
+            <button type="submit"
+                    class="btn btn-primary w-100 py-3 mt-4">
+                ⚡ Predict Machine Condition
+            </button>
+
+        </form>
+
+        {% if result %}
+        <div class="result {{ result.result_class }} mt-4" role="status">
+
+            <h2>{{ result.status }}</h2>
+
+            <p>{{ result.description }}</p>
+
+            {% if result.probability is not none %}
+            <p>
+                <strong>Model-estimated failure probability:</strong>
+                {{ result.probability }}%
+            </p>
+            {% else %}
+            <p>
+                <strong>Failure probability:</strong>
+                Not available for this model.
+            </p>
             {% endif %}
 
-            <p class="note">
-                Note: This is a machine-learning prediction, not a guarantee
-                of machine condition. Results depend on the training data
-                and the input features used by the model.
+            <p class="mb-0">
+                <strong>Illustrative risk category:</strong>
+                {{ result.risk }}
             </p>
-        </section>
-    </main>
 
-    <footer>
-        Predictive Maintenance System | Machine Learning + Flask
-    </footer>
-</body>
-</html>
+        </div>
+        {% endif %}
+
+        <div class="notice mt-4">
+            <strong>Note:</strong> This is a machine-learning estimate,
+            not a guarantee of machine condition. Risk categories are
+            illustrative and should be validated against operational data.
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock %}

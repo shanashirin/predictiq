@@ -1,0 +1,724 @@
+
+{% extends "base.html" %}
+
+{% block title %}Dashboard | PredictIQ{% endblock %}
+
+{% block content %}
+
+<style>
+/* ================= DASHBOARD DESIGN ================= */
+
+.dashboard-page {
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 30px 28px 60px;
+    color: #edf5ff;
+}
+
+.dashboard-hero {
+    position: relative;
+    overflow: hidden;
+    padding: 48px 40px;
+    margin-bottom: 28px;
+    border: 1px solid rgba(56, 189, 248, .18);
+    border-radius: 20px;
+    background:
+        radial-gradient(ellipse at 90% 0%, rgba(14, 165, 233, .16), transparent 45%),
+        linear-gradient(135deg, #11263e, #091628);
+}
+
+.dashboard-eyebrow,
+.dashboard-kicker {
+    color: #38bdf8;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+}
+
+.dashboard-hero h1 {
+    margin: 14px 0;
+    color: #f3f8ff;
+    font-size: clamp(32px, 4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -1.4px;
+}
+
+.dashboard-hero h1 span {
+    color: #38bdf8;
+}
+
+.dashboard-hero p {
+    max-width: 720px;
+    margin: 0;
+    color: #a5bad3;
+    font-size: 15px;
+    line-height: 1.8;
+}
+
+.dashboard-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.dashboard-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 18px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    transition: .2s ease;
+}
+
+.dashboard-btn-primary {
+    color: #061525;
+    background: linear-gradient(135deg, #38bdf8, #60a5fa);
+}
+
+.dashboard-btn-primary:hover {
+    color: #061525;
+    transform: translateY(-2px);
+}
+
+.dashboard-btn-secondary {
+    color: #b9eaff;
+    border: 1px solid #294b69;
+    background: rgba(5, 18, 33, .55);
+}
+
+.dashboard-btn-secondary:hover {
+    color: white;
+    border-color: #38bdf8;
+}
+
+/* Sections */
+
+.dashboard-section {
+    margin-bottom: 26px;
+    padding: 30px;
+    border: 1px solid #223952;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #12243a, #0c1a2d);
+}
+
+.dashboard-section-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.dashboard-section-header h2 {
+    margin: 9px 0 7px;
+    color: #f0f6ff;
+    font-size: 24px;
+    font-weight: 750;
+    letter-spacing: -.4px;
+}
+
+.dashboard-section-header p {
+    margin: 0;
+    color: #9db2cc;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+/* Status indicator */
+
+.dashboard-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    padding: 9px 13px;
+    border: 1px solid rgba(45, 212, 191, .25);
+    border-radius: 999px;
+    background: rgba(20, 184, 166, .09);
+    color: #5eead4;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.dashboard-status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #2dd4bf;
+}
+
+.dashboard-status-unavailable {
+    color: #fda4af;
+    border-color: rgba(251, 113, 133, .25);
+    background: rgba(251, 113, 133, .08);
+}
+
+.dashboard-status-unavailable .dashboard-status-dot {
+    background: #fb7185;
+}
+
+/* Metric cards */
+
+.dashboard-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.dashboard-metrics.four-columns {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.dashboard-metric {
+    min-width: 0;
+    padding: 23px;
+    border: 1px solid #24374e;
+    border-radius: 14px;
+    background: rgba(5, 17, 31, .55);
+    transition: border-color .2s ease, transform .2s ease;
+}
+
+.dashboard-metric:hover {
+    border-color: rgba(56, 189, 248, .45);
+    transform: translateY(-2px);
+}
+
+.dashboard-metric-label {
+    margin-bottom: 17px;
+    color: #9bb4d0;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.dashboard-metric-value {
+    overflow-wrap: anywhere;
+    color: #f2f7ff;
+    font-size: clamp(25px, 2.4vw, 34px);
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -.8px;
+}
+
+.dashboard-metric-value.model-name {
+    font-size: clamp(17px, 1.7vw, 23px);
+    letter-spacing: -.3px;
+}
+
+.dashboard-metric-note {
+    margin-top: 10px;
+    color: #7892ae;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.metric-cyan {
+    border-top: 3px solid #38bdf8;
+}
+
+.metric-green {
+    border-top: 3px solid #2dd4bf;
+}
+
+.metric-purple {
+    border-top: 3px solid #a78bfa;
+}
+
+.metric-orange {
+    border-top: 3px solid #fb923c;
+}
+
+/* Notices */
+
+.dashboard-notice {
+    margin-top: 20px;
+    padding: 15px 17px;
+    border: 1px solid #29435d;
+    border-left: 3px solid #38bdf8;
+    border-radius: 10px;
+    background: rgba(5, 17, 31, .55);
+    color: #a9bfd8;
+    font-size: 13px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+.dashboard-notice.warning {
+    border-color: rgba(251, 191, 36, .3);
+    border-left-color: #fbbf24;
+    color: #fcd78b;
+}
+
+.dashboard-notice code {
+    color: #f0abfc;
+    overflow-wrap: anywhere;
+}
+
+/* Table */
+
+.dashboard-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #263b53;
+    border-radius: 12px;
+}
+
+.dashboard-table {
+    width: 100%;
+    min-width: 500px;
+    margin: 0;
+    border-collapse: collapse;
+    color: #dce8f7;
+    font-size: 13px;
+}
+
+.dashboard-table thead th {
+    padding: 16px 18px;
+    border-bottom: 1px solid #2a4059;
+    background: #0a1728;
+    color: #8fcff2;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .7px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.dashboard-table tbody td {
+    padding: 15px 18px;
+    border-bottom: 1px solid rgba(42, 64, 89, .65);
+    background: transparent;
+    color: #c7d7e9;
+    vertical-align: middle;
+}
+
+.dashboard-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.dashboard-table tbody tr:hover td {
+    background: rgba(56, 189, 248, .035);
+}
+
+.dashboard-table tbody td:first-child {
+    color: #f0f6ff;
+    font-weight: 650;
+}
+
+/* Empty states and bottom actions */
+
+.dashboard-empty {
+    padding: 28px 20px;
+    text-align: center;
+    border: 1px dashed #304963;
+    border-radius: 12px;
+    background: rgba(5, 17, 31, .35);
+}
+
+.dashboard-empty h3 {
+    margin: 0 0 8px;
+    color: #e8f2ff;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.dashboard-empty p {
+    margin: 0;
+    color: #96abc4;
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.dashboard-bottom-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 4px;
+}
+
+/* Responsive */
+
+@media (max-width: 1100px) {
+    .dashboard-metrics.four-columns {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-page {
+        padding: 20px 15px 40px;
+    }
+
+    .dashboard-hero {
+        padding: 30px 23px;
+    }
+
+    .dashboard-section {
+        padding: 22px 18px;
+    }
+
+    .dashboard-section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dashboard-metrics,
+    .dashboard-metrics.four-columns {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .dashboard-metric {
+        padding: 20px;
+    }
+
+    .dashboard-hero-actions,
+    .dashboard-bottom-actions {
+        flex-direction: column;
+    }
+
+    .dashboard-btn {
+        width: 100%;
+    }
+}
+</style>
+
+<main class="dashboard-page">
+
+    <!-- PAGE INTRODUCTION -->
+    <section class="dashboard-hero">
+        <span class="dashboard-eyebrow">
+            SYSTEM OVERVIEW / MODEL MONITORING
+        </span>
+
+        <h1>PredictIQ <span>Dashboard</span></h1>
+
+        <p>
+            Monitor your predictive maintenance model, review available
+            dataset statistics, analyze recent batch predictions, and
+            compare model evaluation results.
+        </p>
+
+        <div class="dashboard-hero-actions">
+            <a href="{{ url_for('home') }}"
+               class="dashboard-btn dashboard-btn-primary">
+                Run Single Prediction &rarr;
+            </a>
+
+            <a href="{{ url_for('batch_upload') }}"
+               class="dashboard-btn dashboard-btn-secondary">
+                Upload CSV Dataset
+            </a>
+        </div>
+    </section>
+
+    <!-- MODEL STATUS -->
+    <section class="dashboard-section">
+
+        <div class="dashboard-section-header">
+            <div>
+                <span class="dashboard-kicker">MODEL STATUS</span>
+                <h2>Deployment Overview</h2>
+                <p>Status of the trained model and preprocessing artifacts
+                   loaded by the Flask application.</p>
+            </div>
+
+            {% if model_ready %}
+            <span class="dashboard-status">
+                <span class="dashboard-status-dot"></span>
+                Model Ready
+            </span>
+            {% else %}
+            <span class="dashboard-status dashboard-status-unavailable">
+                <span class="dashboard-status-dot"></span>
+                Model Unavailable
+            </span>
+            {% endif %}
+        </div>
+
+        <div class="dashboard-metrics">
+
+            <div class="dashboard-metric metric-cyan">
+                <div class="dashboard-metric-label">Loaded Model</div>
+                <div class="dashboard-metric-value model-name">
+                    {{ model_name }}
+                </div>
+                <div class="dashboard-metric-note">
+                    Model currently loaded by Flask
+                </div>
+            </div>
+
+            <div class="dashboard-metric metric-purple">
+                <div class="dashboard-metric-label">Input Feature Count</div>
+                <div class="dashboard-metric-value">
+                    {{ feature_count }}
+                </div>
+                <div class="dashboard-metric-note">
+                    Features expected by the saved model
+                </div>
+            </div>
+
+            <div class="dashboard-metric metric-green">
+                <div class="dashboard-metric-label">Prediction Service</div>
+                <div class="dashboard-metric-value model-name">
+                    {% if model_ready %}
+                        Ready
+                    {% else %}
+                        Unavailable
+                    {% endif %}
+                </div>
+                <div class="dashboard-metric-note">
+                    Model and preprocessing artifacts
+                </div>
+            </div>
+
+        </div>
+
+        {% if artifact_error %}
+        <div class="dashboard-notice warning">
+            <strong>Artifact issue:</strong> {{ artifact_error }}
+        </div>
+        {% endif %}
+
+    </section>
+
+    <!-- DATASET SUMMARY -->
+    <section class="dashboard-section">
+
+        <div class="dashboard-section-header">
+            <div>
+                <span class="dashboard-kicker">DATASET SUMMARY</span>
+                <h2>AI4I Dataset Statistics</h2>
+                <p>
+                    Historical statistics from the original dataset,
+                    when its CSV file is available.
+                </p>
+            </div>
+        </div>
+
+        <div class="dashboard-metrics">
+
+            <div class="dashboard-metric">
+                <div class="dashboard-metric-label">Dataset Records</div>
+                <div class="dashboard-metric-value">
+                    {% if stats.records is not none %}
+                        {{ "{:,}".format(stats.records) }}
+                    {% else %}
+                        &mdash;
+                    {% endif %}
+                </div>
+                <div class="dashboard-metric-note">
+                    Total records in the source dataset
+                </div>
+            </div>
+
+            <div class="dashboard-metric">
+                <div class="dashboard-metric-label">Recorded Failures</div>
+                <div class="dashboard-metric-value">
+                    {% if stats.failures is not none %}
+                        {{ "{:,}".format(stats.failures) }}
+                    {% else %}
+                        &mdash;
+                    {% endif %}
+                </div>
+                <div class="dashboard-metric-note">
+                    Failures recorded in the dataset labels
+                </div>
+            </div>
+
+            <div class="dashboard-metric">
+                <div class="dashboard-metric-label">Dataset Failure Rate</div>
+                <div class="dashboard-metric-value">
+                    {% if stats.failure_rate is not none %}
+                        {{ stats.failure_rate }}%
+                    {% else %}
+                        &mdash;
+                    {% endif %}
+                </div>
+                <div class="dashboard-metric-note">
+                    Based on recorded failure labels
+                </div>
+            </div>
+
+        </div>
+
+        {% if stats.source %}
+        <div class="dashboard-notice">
+            <strong>Data source:</strong> {{ stats.source }}
+        </div>
+        {% else %}
+        <div class="dashboard-notice">
+            Dataset statistics are not available yet. Place the original
+            AI4I dataset in your project folder as
+            <code>ai4i2020.csv</code>, or use a supported filename
+            configured in <code>app.py</code>.
+        </div>
+        {% endif %}
+
+    </section>
+
+    <!-- LATEST BATCH PREDICTION -->
+    <section class="dashboard-section">
+
+        <div class="dashboard-section-header">
+            <div>
+                <span class="dashboard-kicker">BATCH ANALYTICS</span>
+                <h2>Latest Batch Prediction</h2>
+                <p>
+                    Results from your most recently processed CSV upload.
+                </p>
+            </div>
+
+            <a href="{{ url_for('batch_upload') }}"
+               class="dashboard-btn dashboard-btn-secondary">
+                Upload Another CSV &rarr;
+            </a>
+        </div>
+
+        {% if latest_batch %}
+
+        <div class="dashboard-metrics four-columns">
+
+            <div class="dashboard-metric metric-cyan">
+                <div class="dashboard-metric-label">Records Processed</div>
+                <div class="dashboard-metric-value">
+                    {{ "{:,}".format(latest_batch.total_records) }}
+                </div>
+            </div>
+
+            <div class="dashboard-metric metric-orange">
+                <div class="dashboard-metric-label">Predicted Failures</div>
+                <div class="dashboard-metric-value">
+                    {{ "{:,}".format(latest_batch.predicted_failures) }}
+                </div>
+            </div>
+
+            <div class="dashboard-metric metric-green">
+                <div class="dashboard-metric-label">Predicted No Failures</div>
+                <div class="dashboard-metric-value">
+                    {{ "{:,}".format(latest_batch.predicted_no_failures) }}
+                </div>
+            </div>
+
+            <div class="dashboard-metric metric-purple">
+                <div class="dashboard-metric-label">Predicted Failure Rate</div>
+                <div class="dashboard-metric-value">
+                    {{ latest_batch.predicted_failure_rate }}%
+                </div>
+            </div>
+
+        </div>
+
+        <div class="dashboard-notice">
+            These values represent model predictions, not verified
+            real-world machine failures. They summarize the latest
+            successful batch processed by the application.
+        </div>
+
+        {% else %}
+
+        <div class="dashboard-empty">
+            <h3>No batch predictions yet</h3>
+            <p>
+                Upload a supported sensor CSV file to process multiple
+                records and display the summary here.
+            </p>
+            <a href="{{ url_for('batch_upload') }}"
+               class="dashboard-btn dashboard-btn-primary mt-3">
+                Upload CSV Dataset &rarr;
+            </a>
+        </div>
+
+        {% endif %}
+
+    </section>
+
+    <!-- MODEL EVALUATION -->
+    <section class="dashboard-section">
+
+        <div class="dashboard-section-header">
+            <div>
+                <span class="dashboard-kicker">MODEL EVALUATION</span>
+                <h2>Model Comparison</h2>
+                <p>
+                    Evaluation metrics generated during model testing
+                    and loaded from <code>model_comparison.csv</code>.
+                </p>
+            </div>
+        </div>
+
+        {% if comparison_error %}
+        <div class="dashboard-notice warning">
+            {{ comparison_error }}
+        </div>
+        {% endif %}
+
+        {% if comparison %}
+
+        <div class="dashboard-table-wrap">
+            <table class="dashboard-table">
+
+                <thead>
+                    <tr>
+                        {% for column in comparison[0].keys() %}
+                        <th>{{ column.replace('_', ' ') }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for model_row in comparison %}
+                    <tr>
+                        {% for value in model_row.values() %}
+                        <td>
+                            {% if value is number %}
+                                {{ "%.4f"|format(value) }}
+                            {% elif value is none %}
+                                &mdash;
+                            {% else %}
+                                {{ value }}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+        {% else %}
+
+        <div class="dashboard-empty">
+            <h3>Evaluation data unavailable</h3>
+            <p>
+                Save your model evaluation results as
+                <code>model_comparison.csv</code> in your project
+                folder or the configured <code>artifacts</code> folder.
+                The table will appear when the file is available.
+            </p>
+        </div>
+
+        {% endif %}
+
+    </section>
+
+    <!-- QUICK ACTIONS -->
+    <section class="dashboard-bottom-actions">
+        <a href="{{ url_for('home') }}"
+           class="dashboard-btn dashboard-btn-primary">
+            Run Single Prediction &rarr;
+        </a>
+
+        <a href="{{ url_for('batch_upload') }}"
+           class="dashboard-btn dashboard-btn-secondary">
+            Batch CSV Prediction
+        </a>
+    </section>
+
+</main>
+
+{% endblock %}
